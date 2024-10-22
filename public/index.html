@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.io Game</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h2>Player Scores</h2>
+    <ul id="scores"></ul>
+    <button id="scoreUp">Score +1</button>
+
+    <script>
+        const socket = io();
+
+        document.getElementById('scoreUp').onclick = function() {
+            socket.emit('update score', 1); // Update score by 1
+        };
+
+        socket.on('score update', function(scores) {
+            const scoresList = document.getElementById('scores');
+            scoresList.innerHTML = ''; // Clear the list
+            for (const player in scores) {
+                const item = document.createElement('li');
+                item.textContent = `${player}: ${scores[player].score}`;
+                scoresList.appendChild(item);
+            }
+        });
+    </script>
+</body>
+</html>
